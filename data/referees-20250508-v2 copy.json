@@ -1,0 +1,420 @@
+[
+   {
+      "ID" : 3,
+      "name" : "Vincenzo",
+      "surname" : "Bonnici",
+      "topics" : [
+         "AI, Models, and Tools",
+         "Genomics, Transcriptomics, and Metagenomics",
+         "Systems Biology and Multi-Omics"
+      ]
+   },
+   {
+      "ID" : 478,
+      "name" : "Martina",
+      "surname" : "Betti",
+      "topics" : [
+         "AI, Models, and Tools",
+         "Genomics, Transcriptomics, and Metagenomics",
+         "Systems Biology and Multi-Omics",
+         "Translational Bioinformatics: Clinics, agriculture, environment, food"
+      ]
+   },
+   {
+      "ID" : 19,
+      "name" : "Raffaele",
+      "surname" : "Calogero",
+      "topics" : [
+         "AI, Models, and Tools",
+         "Genomics, Transcriptomics, and Metagenomics",
+         "Systems Biology and Multi-Omics"
+      ]
+   },
+   {
+      "ID" : 25,
+      "name" : "Arnaud",
+      "surname" : "Ceol",
+      "topics" : [
+         "AI, Models, and Tools",
+         "Sustainable bioinformatics: infrastructure, interoperability, and data sharing"
+      ]
+   },
+   {
+      "ID" : 26,
+      "name" : "Maria Luisa",
+      "surname" : "Chiusano",
+      "topics" : []
+   },
+   {
+      "ID" : 37,
+      "name" : "Angelo",
+      "surname" : "Facchiano",
+      "topics" : [
+         "Proteins and Proteomics",
+         "Sustainable bioinformatics: infrastructure, interoperability, and data sharing",
+         "Translational Bioinformatics: Clinics, agriculture, environment, food"
+      ]
+   },
+   {
+      "ID" : 55,
+      "name" : "Roberto",
+      "surname" : "Marangoni",
+      "topics" : []
+   },
+   {
+      "ID" : 58,
+      "name" : "Marco",
+      "surname" : "Masseroli",
+      "topics" : []
+   },
+   {
+      "ID" : 60,
+      "name" : "Giancarlo",
+      "surname" : "Mauri",
+      "topics" : []
+   },
+   {
+      "ID" : 72,
+      "name" : "Graziano",
+      "surname" : "Pesole",
+      "topics" : [
+         "Genomics, Transcriptomics, and Metagenomics"
+      ]
+   },
+   {
+      "ID" : 88,
+      "name" : "Silvio",
+      "surname" : "Tosatto",
+      "topics" : []
+   },
+   {
+      "ID" : 94,
+      "name" : "Andreas",
+      "surname" : "Zanzoni",
+      "topics" : []
+   },
+   {
+      "ID" : 96,
+      "name" : "Pasqualina",
+      "surname" : "D'Ursi",
+      "topics" : []
+   },
+   {
+      "ID" : 106,
+      "name" : "Anna",
+      "surname" : "Marabotti",
+      "topics" : [
+         "Pharmaceutical and Toxicology",
+         "Proteins and Proteomics"
+      ]
+   },
+   {
+      "ID" : 112,
+      "name" : "Mario",
+      "surname" : "Cannataro",
+      "topics" : []
+   },
+   {
+      "ID" : 505,
+      "name" : "Antonino",
+      "surname" : "Staiano",
+      "topics" : []
+   },
+   {
+      "ID" : 130,
+      "name" : "Alessandro",
+      "surname" : "Pandini",
+      "topics" : [
+         "AI, Models, and Tools",
+         "Proteins and Proteomics"
+      ]
+   },
+   {
+      "ID" : 150,
+      "name" : "Manuela",
+      "surname" : "Helmer Citterich",
+      "topics" : [
+         "AI, Models, and Tools",
+         "Genomics, Transcriptomics, and Metagenomics",
+         "Proteins and Proteomics",
+         "Systems Biology and Multi-Omics"
+      ]
+   },
+   {
+      "ID" : 168,
+      "name" : "Davide",
+      "surname" : "Cora",
+      "topics" : []
+   },
+   {
+      "ID" : 175,
+      "name" : "Claudia",
+      "surname" : "Angelini",
+      "topics" : [
+         "AI, Models, and Tools",
+         "Genomics, Transcriptomics, and Metagenomics",
+         "Systems Biology and Multi-Omics"
+      ]
+   },
+   {
+      "ID" : 193,
+      "name" : "Pietro Hiram",
+      "surname" : "Guzzi",
+      "topics" : [
+         "AI, Models, and Tools",
+         "Systems Biology and Multi-Omics"
+      ]
+   },
+   {
+      "ID" : 195,
+      "name" : "Marco",
+      "surname" : "Pellegrini",
+      "topics" : [
+         "AI, Models, and Tools",
+         "Systems Biology and Multi-Omics"
+      ]
+   },
+   {
+      "ID" : 196,
+      "name" : "Rosalba",
+      "surname" : "Giugno",
+      "topics" : []
+   },
+   {
+      "ID" : 207,
+      "name" : "Federica",
+      "surname" : "Chiappori",
+      "topics" : [
+         "AI, Models, and Tools",
+         "Genomics, Transcriptomics, and Metagenomics",
+         "Proteins and Proteomics"
+      ]
+   },
+   {
+      "ID" : 228,
+      "name" : "Paola",
+      "surname" : "Festa",
+      "topics" : []
+   },
+   {
+      "ID" : 248,
+      "name" : "Remo",
+      "surname" : "Sanges",
+      "topics" : []
+   },
+   {
+      "ID" : 250,
+      "name" : "Alessandro",
+      "surname" : "Cestaro",
+      "topics" : []
+   },
+   {
+      "ID" : 259,
+      "name" : "Eugenio",
+      "surname" : "Del Prete",
+      "topics" : [
+         "Genomics, Transcriptomics, and Metagenomics",
+         "Other applications",
+         "Proteins and Proteomics",
+         "Systems Biology and Multi-Omics"
+      ]
+   },
+   {
+      "ID" : 264,
+      "name" : "Matteo",
+      "surname" : "Pallocca",
+      "topics" : []
+   },
+   {
+      "ID" : 302,
+      "name" : "Giosuè",
+      "surname" : "Lo Bosco",
+      "topics" : []
+   },
+   {
+      "ID" : 303,
+      "name" : "Ettore",
+      "surname" : "Mosca",
+      "topics" : [
+         "Genomics, Transcriptomics, and Metagenomics",
+         "Systems Biology and Multi-Omics",
+         "Translational Bioinformatics: Clinics, agriculture, environment, food"
+      ]
+   },
+   {
+      "ID" : 304,
+      "name" : "Giulio",
+      "surname" : "Ferrero",
+      "topics" : []
+   },
+   {
+      "ID" : 318,
+      "name" : "Bruno",
+      "surname" : "Fosso",
+      "topics" : [
+         "Genomics, Transcriptomics, and Metagenomics"
+      ]
+   },
+   {
+      "ID" : 431,
+      "name" : "Toma",
+      "surname" : "Tebaldi",
+      "topics" : [
+         "Genomics, Transcriptomics, and Metagenomics",
+         "Proteins and Proteomics",
+         "Systems Biology and Multi-Omics"
+      ]
+   },
+   {
+      "ID" : 328,
+      "name" : "Andrea",
+      "surname" : "Manconi",
+      "topics" : [
+         "AI, Models, and Tools",
+         "Sustainable bioinformatics: infrastructure, interoperability, and data sharing"
+      ]
+   },
+   {
+      "ID" : 349,
+      "name" : "Matteo",
+      "surname" : "Comin",
+      "topics" : [
+         "AI, Models, and Tools",
+         "Genomics, Transcriptomics, and Metagenomics"
+      ]
+   },
+   {
+      "ID" : 365,
+      "name" : "Alessandro",
+      "surname" : "Romanel",
+      "topics" : [
+         "AI, Models, and Tools",
+         "Genomics, Transcriptomics, and Metagenomics",
+         "Proteins and Proteomics",
+         "Systems Biology and Multi-Omics"
+      ]
+   },
+   {
+      "ID" : 400,
+      "name" : "Paola",
+      "surname" : "Fossa",
+      "topics" : [
+         "Pharmaceutical and Toxicology"
+      ]
+   },
+   {
+      "ID" : 410,
+      "name" : "Luca",
+      "surname" : "Alessandrì",
+      "topics" : []
+   },
+   {
+      "ID" : 414,
+      "name" : "Simone",
+      "surname" : "Pernice",
+      "topics" : [
+         "AI, Models, and Tools",
+         "Systems Biology and Multi-Omics"
+      ]
+   },
+   {
+      "ID" : 416,
+      "name" : "Bruno",
+      "surname" : "Hay Mele",
+      "topics" : [
+         "AI, Models, and Tools",
+         "Genomics, Transcriptomics, and Metagenomics",
+         "Proteins and Proteomics",
+         "Sustainable bioinformatics: infrastructure, interoperability, and data sharing"
+      ]
+   },
+   {
+      "ID" : 417,
+      "name" : "Giuseppe",
+      "surname" : "Defazio",
+      "topics" : []
+   },
+   {
+      "ID" : 453,
+      "name" : "Eliana",
+      "surname" : "Ibrahimi",
+      "topics" : [
+         "AI, Models, and Tools",
+         "Genomics, Transcriptomics, and Metagenomics"
+      ]
+   },
+   {
+      "ID" : 467,
+      "name" : "Pietro",
+      "surname" : "Cinaglia",
+      "topics" : []
+   },
+   {
+      "ID" : 477,
+      "name" : "Alessandro",
+      "surname" : "Quattrone",
+      "topics" : []
+   },
+   {
+      "ID" : 506,
+      "name" : "Francesco",
+      "surname" : "Napolitano",
+      "topics" : []
+   },
+   {
+      "ID" : 507,
+      "name" : "Ilaria",
+      "surname" : "Granata",
+      "topics" : []
+   },
+   {
+      "ID" : 508,
+      "name" : "Aleksandra",
+      "surname" : "Swiercz",
+      "topics" : [
+         "AI, Models, and Tools",
+         "Genomics, Transcriptomics, and Metagenomics",
+         "Systems Biology and Multi-Omics"
+      ]
+   },
+   {
+      "ID" : 509,
+      "name" : "Angela",
+      "surname" : "Serra",
+      "topics" : [
+         "AI, Models, and Tools",
+         "Pharmaceutical and Toxicology"
+      ]
+   },
+   {
+      "ID" : 510,
+      "name" : "Antonio",
+      "surname" : "Federico",
+      "topics" : []
+   },
+   {
+      "ID" : 511,
+      "name" : "Panagiota",
+      "surname" : "Kontou",
+      "topics" : []
+   },
+   {
+      "ID" : 512,
+      "name" : "Pantelis ",
+      "surname" : "Bagos",
+      "topics" : []
+   },
+   {
+      "ID" : 137,
+      "name" : "Roberto",
+      "surname" : "Tagliaferri",
+      "topics" : []
+   },
+   {
+      "ID" : 514,
+      "name" : "Francesco",
+      "surname" : "Bardozzo",
+      "topics" : []
+   }
+]
+
