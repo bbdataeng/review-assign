@@ -1,5 +1,5 @@
 input_paths:
-  abstracts: "../data/abstract-late-poster-2025.json"
+  abstracts: "../data/abstract-20250508.json"
   reviewers: "../data/referees-20250508-v2 copy.json"
 
 output_paths:
@@ -12,8 +12,14 @@ cache_paths:
   coauth_graph: "../cache/coauth_graph.pkl"
 
 parameters:
-  max_assign: 1
-  max_assign_jolly: 1
+  max_assign: 5 # numero di assegnazioni massime per un revisore standard
+  max_assign_jolly: 7 # numero di assegnazioni massime per un revisore jolly
+  required_reviewers:
+    "Oral communication": 3 # numero di revisori necessari per Oral communication
+    "Poster": 1 # numero di revisori necessari per Poster
+    "Late Poster": 1 # numero di revisori necessari per Late Poster
+    
+    
   jolly_revs:
     - '7004035394' # Raffaele Calogero
     - '12770864300' # Pasqualina D'Ursi
@@ -28,5 +34,5 @@ parameters:
     - '7004695643' # Roberto Tagliaferri
     - '57015392700' # Francesco Bardozzo
 
-    # - '55919285100' # Matteo Pallocca
-    # - '23488108200' # Alessandro Cestaro
+    - '55919285100' # Matteo Pallocca
+    - '23488108200' # Alessandro Cestaro
