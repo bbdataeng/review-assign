@@ -36,6 +36,7 @@ cached_graph = config["cache_paths"]["coauth_graph"]
 max_assign = config["parameters"]["max_assign"]
 max_assign_jolly = config["parameters"]["max_assign_jolly"]
 jolly_revs = config["parameters"]["jolly_revs"]
+req_reviewers_map = config["parameters"].get("required_reviewers", {})
 
 abstract_reviewers = config["output_paths"]["abstract_reviewers"]
 reviewers_assignment = config["output_paths"]["reviewers_assignment"]
@@ -170,8 +171,8 @@ class TopicMapper:
         
     def map_to_conference_topic(self, scopus_topics, threshold=0.6):
         """Mappa i topic Scopus alle sessioni della conferenza in base alla similarità"""
-        # if not scopus_topics:
-        #     return ["OTHER APPLICATIONS"]
+        if not scopus_topics:
+            return ["OTHER APPLICATIONS"]
             
         scopus_embeddings = self.model.encode([t.upper() for t in scopus_topics])
         similarity_matrix = cosine_similarity(scopus_embeddings, self.topic_embeddings)
@@ -339,105 +340,215 @@ def create_reviewer_author_network(abstracts_df, reviewers_df, min_sleep=3, max_
     return G
 
 
-def reviewer_choice(G, abstract_num, abstract_df, max_ass=6, jolly_revs=None, max_ass_jolly=10, consider_weight=False, randomness_factor=0.2, allow_bonus = True):
+import random
+import logging
 
-    # dati abstract
+# def reviewer_choice(G, abstract_num, abstract_df, req_reviewers_map, max_ass=6, jolly_revs=None, max_ass_jolly=12):
+    
+#     # Estrazione dati abstract
+#     abstract_data = abstract_df.loc[abstract_df['abstract_id'] == abstract_num].iloc[0]
+#     topic = abstract_data['session']
+#     abstract_type = abstract_data['type']
+#     author_ids = list(map(str, abstract_df.loc[abstract_df['abstract_id'] == abstract_num, 'scopus_id'].dropna().tolist()))
+    
+#     # Numero di revisori richiesti 
+#     required_reviewers = req_reviewers_map.get(abstract_type, 3)
+    
+#     print(f"\nAssegnazione abstract {abstract_num} - Tipo: {abstract_type}")
+#     print(f"Topic: {topic} | Autori: {author_ids} | Revisori richiesti: {required_reviewers}")
+
+#     # Pool revisori
+#     jolly_reviewers = set(jolly_revs if jolly_revs else [])
+#     standard_nodes = [n for n in G.nodes() if n not in jolly_reviewers]
+    
+#     # Funzioni di utilità interne
+#     def has_collaboration(reviewer, authors):
+#         return any(G.has_edge(reviewer, author) for author in authors)
+    
+#     def is_eligible(reviewer, enforce_topic=True, ignore_limits=False):
+#         # prende solo i revisori
+#         if reviewer not in G or not G.nodes[reviewer].get('reviewer', False):
+#             return False
+#         # esclude chi ha collaborato
+#         if reviewer in author_ids or has_collaboration(reviewer, author_ids):
+#             return False
+#         # esclude chi non ha topic in comune
+#         if enforce_topic and topic not in G.nodes[reviewer].get('topics', []):
+#             return False
+            
+#         # controllo revisioni assegnate
+#         is_jolly = reviewer in jolly_reviewers
+#         limit = max_ass_jolly if is_jolly else max_ass
+#         current_count = G.nodes[reviewer].get('review_count', 0)
+        
+#         if not ignore_limits and current_count >= limit:
+#             return False
+            
+#         return True
+
+#     def get_candidates(pool, enforce_topic=True, ignore_limits=False):
+#         return [rev for rev in pool if is_eligible(rev, enforce_topic, ignore_limits)]
+        
+#     def fairness_score(reviewer):
+#         is_jolly = reviewer in jolly_reviewers
+#         limit = max_ass_jolly if is_jolly else max_ass
+#         current = G.nodes[reviewer].get('review_count', 0)
+#         return current / limit if limit > 0 else 1
+        
+#     def rank_reviewers(candidates):
+#         ranked = [(fairness_score(rev), rev) for rev in candidates]
+#         random.shuffle(ranked)  # a parità di score, sceglie casualmente per evitare bias
+#         ranked.sort(key=lambda x: x[0]) # ordina dal meno carico al più carico
+#         return [rev for (_, rev) in ranked]
+
+#     # assegnazione:
+#     selected = []
+    
+#     # Ricerca per il match
+#     if abstract_type == "Late Poster":
+#         # i late poster vanno idealmente solo ai jolly (che hanno il topic)
+#         candidates_fase1 = get_candidates(jolly_reviewers, enforce_topic=True)
+#     else:
+#         # tutti gli altri: jolly + standard con match topic. 
+#         # (priorità ai jolly)
+#         candidates_fase1 = get_candidates(jolly_reviewers, enforce_topic=True) + \
+#                            get_candidates(standard_nodes, enforce_topic=True)
+        
+#     selected.extend(rank_reviewers(candidates_fase1)[:required_reviewers])
+    
+#     # Fallback sui Jolly SENZA Topic 
+#     if len(selected) < required_reviewers:
+#         remaining = required_reviewers - len(selected)
+#         candidates_fase2 = get_candidates(jolly_reviewers, enforce_topic=False)
+#         candidates_fase2 = [c for c in candidates_fase2 if c not in selected]
+#         selected.extend(rank_reviewers(candidates_fase2)[:remaining])
+        
+#     # Fallback sugli Standard SENZA Topic
+#     if len(selected) < required_reviewers:
+#         remaining = required_reviewers - len(selected)
+#         candidates_fase3 = get_candidates(standard_nodes, enforce_topic=False)
+#         candidates_fase3 = [c for c in candidates_fase3 if c not in selected]
+#         selected.extend(rank_reviewers(candidates_fase3)[:remaining])
+        
+#     # Se mancano ancora revisori, ignora i limiti max_ass (ma mantiene il blocco sui topics)
+#     if len(selected) < required_reviewers:
+#         logging.warning(f"Abstract {abstract_num}: Limiti superati, assegno revisori extra-carico.")
+#         remaining = required_reviewers - len(selected)
+#         candidates_fase4 = get_candidates(jolly_reviewers, enforce_topic=False, ignore_limits=True) + \
+#                            get_candidates(standard_nodes, enforce_topic=False, ignore_limits=True)
+#         candidates_fase4 = [c for c in candidates_fase4 if c not in selected]
+#         selected.extend(rank_reviewers(candidates_fase4)[:remaining])
+        
+#     # nessuna assegnazione possibile
+#     if len(selected) < required_reviewers:
+#         logging.critical(f"ERRORE: Abstract {abstract_num} impossibile da assegnare. Troppi Conflitti di Interesse nella rete.")
+    
+#     # aggiorna abstracts assegnati
+#     for reviewer in selected:
+#         G.nodes[reviewer]['review_count'] = G.nodes[reviewer].get('review_count', 0) + 1
+        
+#     return selected if len(selected) > 0 else None
+
+import random
+import logging
+
+def reviewer_choice(G, abstract_num, abstract_df, req_reviewers_map, max_ass=6, jolly_revs=None, max_ass_jolly=12):
+    
+    # Estrazione dati abstract
     abstract_data = abstract_df.loc[abstract_df['abstract_id'] == abstract_num].iloc[0]
     topic = abstract_data['session']
     abstract_type = abstract_data['type']
     author_ids = list(map(str, abstract_df.loc[abstract_df['abstract_id'] == abstract_num, 'scopus_id'].dropna().tolist()))
     
+    required_reviewers = req_reviewers_map.get(abstract_type, 3)
+    
     print(f"\nAssegnazione abstract {abstract_num} - Tipo: {abstract_type}")
-    print(f"Topic: {topic} | Autori: {author_ids}")
+    print(f"Topic: {topic} | Autori: {author_ids} | Revisori richiesti: {required_reviewers}")
 
-    
-    required_reviewers = 2 if abstract_type == "Poster" else 3
-    jolly_reviewers = jolly_revs 
+    # Setup pool
+    jolly_reviewers = set(jolly_revs if jolly_revs else [])
+    standard_nodes = [n for n in G.nodes() if n not in jolly_reviewers]
     
 
-        
     def has_collaboration(reviewer, authors):
         return any(G.has_edge(reviewer, author) for author in authors)
     
-    def collaboration_strength(reviewer, authors):
-        return sum(G.get_edge_data(reviewer, author, {'weight': 0})['weight'] 
-                 for author in authors if G.has_edge(reviewer, author))
-    
-    def get_eligible_reviewers(reviewer_list, max_assignments):
-        return [
-            node for node in reviewer_list
-            if (G.nodes[node].get('reviewer', False)) and
-                node not in author_ids and # non è nella lista degli autor
-                not has_collaboration(node, author_ids) and # non ha collaborato con nessuno degli autro
-                topic in G.nodes[node].get('topics', []) and # condivide lo stesso topic
-                G.nodes[node].get('review_count', 0) < max_assignments # non ha superato il limite di assegnazioni
+    def is_eligible(reviewer, enforce_topic=True, ignore_limits=False):
+        if reviewer not in G or not G.nodes[reviewer].get('reviewer', False):
+            return False
+        if reviewer in author_ids or has_collaboration(reviewer, author_ids):
+            return False
+        if enforce_topic and topic not in G.nodes[reviewer].get('topics', []):
+            return False
+            
+        limit = max_ass_jolly if reviewer in jolly_reviewers else max_ass
+        current_count = G.nodes[reviewer].get('review_count', 0)
+        
+        if not ignore_limits and current_count >= limit:
+            return False
+        return True
+
+    def get_candidates(pool, enforce_topic=True, ignore_limits=False):
+        return [rev for rev in pool if is_eligible(rev, enforce_topic, ignore_limits)]
+        
+    def rank_reviewers(candidates):
+        """Ordina i revisori per equità, favorendo i Jolly in caso di pareggio"""
+        def score(rev):
+            limit = max_ass_jolly if rev in jolly_reviewers else max_ass
+            current = G.nodes[rev].get('review_count', 0)
+            return current / limit if limit > 0 else 1
+            
+        # Score, Priorità Jolly, Random)
+        # Priorità Jolly: 0 se è jolly, 1 se standard (così lo 0 viene prima nell'ordinamento crescente)
+        ranked = [
+            (score(rev), 0 if rev in jolly_reviewers else 1, random.random(), rev) 
+            for rev in candidates
         ]
-    
-    standard_candidates = get_eligible_reviewers(G.nodes(), max_ass)
-    jolly_candidates = get_eligible_reviewers(jolly_revs, max_ass_jolly)
+        
+        # ordina per score crescente, poi per priorità jolly, poi casuale
+        ranked.sort(key=lambda x: (x[0], x[1], x[2]))
+        return [rev for (_, _, _, rev) in ranked]
+
+    # assegnazione:
+    selected = []
     
     if abstract_type == "Late Poster":
-        required_reviewers = 1
-        standard_candidates = jolly_candidates
-        jolly_candidates = []
+        # I Late Poster cercano prima solo tra i Jolly
+        candidates = get_candidates(jolly_reviewers, enforce_topic=True)
+        selected.extend(rank_reviewers(candidates)[:required_reviewers])
+    else:
+        # step 1: pool misto (Standard + Jolly) CON Topic
+        # Il rank_reviewers si assicurerà che crescano in modo interlacciato
+        mixed_candidates_topic = get_candidates(jolly_reviewers, enforce_topic=True) + \
+                                 get_candidates(standard_nodes, enforce_topic=True)
+        selected.extend(rank_reviewers(mixed_candidates_topic)[:required_reviewers])
         
-    # # se non ci sono abbstanza revisori -> seleziona jolly anche se hanno un topic diverso
-    # if allow_bonus and (len(standard_candidates) + len(jolly_candidates)) < required_reviewers:
-    #     fallback_candidates = [
-    #         node for node in jolly_reviewers
-    #         if (G.nodes[node].get('reviewer', False) and
-    #             node not in author_ids and
-    #             not has_collaboration(node, author_ids) and
-    #             G.nodes[node].get('review_count', 0) < max_ass_jolly and
-    #             node not in standard_candidates + jolly_candidates  
-    #         )
-    #     ]
+    # step 2: pool misto (Standard + Jolly) SENZA Topic
+    if len(selected) < required_reviewers:
+        remaining = required_reviewers - len(selected)
+        mixed_candidates_notopic = get_candidates(jolly_reviewers, enforce_topic=False) + \
+                                   get_candidates(standard_nodes, enforce_topic=False)
+        mixed_candidates_notopic = [c for c in mixed_candidates_notopic if c not in selected]
+        selected.extend(rank_reviewers(mixed_candidates_notopic)[:remaining])
         
-    #     if fallback_candidates:
-    #         print(f"assegnazione non ottimale per abstract {abstract_num} - revisori jolly senza topic matching")
-    #         jolly_candidates += fallback_candidates
-        
-    def fairness_score(reviewer):
-        max_assign = max_ass_jolly if reviewer in jolly_reviewers else max_ass
-        current_assignments = G.nodes[reviewer].get('review_count', 0)
-        
-        # Componenti del punteggio
-        load_balance = current_assignments / max_assign  
-        # random_component = random.uniform(0, randomness_factor)
-        
-        score = [load_balance]
-        
-        if consider_weight:
-            collab_strength = collaboration_strength(reviewer, author_ids)
-            score.append(collab_strength * 0.1)  # Peso minore alle collaborazioni
-        
-        return tuple(score)
+    # step 3: ignora limiti, ma rispetta conflitti d'interesse
+    if len(selected) < required_reviewers:
+        logging.warning(f"Abstract {abstract_num}: Limiti superati, assegno revisori extra-carico.")
+        remaining = required_reviewers - len(selected)
+        emergency_candidates = get_candidates(jolly_reviewers, enforce_topic=False, ignore_limits=True) + \
+                               get_candidates(standard_nodes, enforce_topic=False, ignore_limits=True)
+        emergency_candidates = [c for c in emergency_candidates if c not in selected]
+        selected.extend(rank_reviewers(emergency_candidates)[:remaining])
+            
+    if len(selected) < required_reviewers:
+        logging.critical(f"ERRORE: Abstract {abstract_num} impossibile da assegnare. Troppi Conflitti di Interesse.")
     
-    # ranking dei candidati
-    def rank_reviewers(candidates):
-        ranked = [(fairness_score(rev), rev) for rev in candidates]
-        random.shuffle(ranked)  # Mescola 
-        ranked.sort(key=lambda x: x[0])  # Ordina per punteggio
-        return [rev for (_, rev) in ranked]
-    
-    standard_ranked = rank_reviewers(standard_candidates)
-    jolly_ranked = rank_reviewers(jolly_candidates)
-    
-    # selezione dei candidati
-    selected = standard_ranked[:required_reviewers]
-    remaining = required_reviewers - len(selected)
-    
-    if remaining > 0 and jolly_ranked:
-        selected += jolly_ranked[:remaining]
-    
-    # aggiorna numero revisioni assegnate
+    # Aggiornamento numero revisioni assegnate
     for reviewer in selected:
         G.nodes[reviewer]['review_count'] = G.nodes[reviewer].get('review_count', 0) + 1
+        
+    return selected if len(selected) > 0 else None
     
-    # print(f"Selected Reviewers: {selected}")
-    return selected if len(selected) >= required_reviewers else None
-
-
 def save_final_assignments(G, authors_df, max_ass = 6, jolly_revs=None, max_ass_jolly = 10):
     """
     Salva due file json:
@@ -454,9 +565,15 @@ def save_final_assignments(G, authors_df, max_ass = 6, jolly_revs=None, max_ass_
     for abstract_id in authors_df['abstract_id'].unique():
 
         # generate list of assigned reviewers
-        assigned_reviewers = reviewer_choice(G, abstract_id, authors_df, max_ass = max_ass, jolly_revs=jolly_revs, max_ass_jolly = max_ass_jolly)
-        
-
+        assigned_reviewers = reviewer_choice(
+        G=G, 
+        abstract_num=abstract_id, 
+        abstract_df=authors_df, 
+        req_reviewers_map=req_reviewers_map, 
+        max_ass=max_assign,             
+        jolly_revs=jolly_revs,          
+        max_ass_jolly=max_assign_jolly  
+)
         if not assigned_reviewers:
             not_assigned +=1
             logging.info(f"Nessun revisore assegnato per l'abstract {abstract_id}")

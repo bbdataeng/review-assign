@@ -39,17 +39,17 @@ bits_topics = set(abstract_df['session'][abstract_df['session'].notnull()])
 # trova ID scopus per tutti gli autori degli abstract e per i reviewers
 
 if all(os.path.exists(f) for f in [cached_authors, cached_reviewers]):
-    authors_id, reviewers_id = pd.read_json('../cache/cached_authors.json', orient='index'), pd.read_json('../cache/cached_reviewers.json', orient='index')
+    authors_id, reviewers_id = pd.read_json(cached_authors, orient='index'), pd.read_json(cached_reviewers, orient='index')
     logging.info("Autori e Revisori già esistenti, carico.")
 elif os.path.exists(cached_authors):
-    authors_id = pd.read_json('../cache/cached_authors.json', orient='index')
+    authors_id = pd.read_json(cached_authors, orient='index')
     logging.info("Autori già esistenti, carico.")
     reviewers_id = process_reviewers(reviewers_df, bits_topics)
     os.makedirs('../cache', exist_ok=True) 
     reviewers_id.to_json(cached_reviewers, orient='index', force_ascii=False)
     logging.info("Revisori salvati.")
 elif os.path.exists(cached_reviewers):
-    reviewers_id = pd.read_json('../cache/cached_reviewers.json', orient='index')
+    reviewers_id = pd.read_json(cached_reviewers, orient='index')
     logging.info("Revisori già esistenti, carico.")
     authors_id = process_authors(abstract_df)
     os.makedirs('../cache', exist_ok=True) 
