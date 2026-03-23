@@ -548,7 +548,7 @@ def reviewer_choice(G, abstract_num, abstract_df, req_reviewers_map, max_ass=6, 
         G.nodes[reviewer]['review_count'] = G.nodes[reviewer].get('review_count', 0) + 1
         
     return selected if len(selected) > 0 else None
-    
+
 def save_final_assignments(G, authors_df, max_ass = 6, jolly_revs=None, max_ass_jolly = 10):
     """
     Salva due file json:
@@ -612,7 +612,7 @@ def save_final_assignments(G, authors_df, max_ass = 6, jolly_revs=None, max_ass_
         .apply(pd.to_numeric, errors='coerce')\
         .astype('Int64') # per convertire gli id in interi 
  
-            
+    os.makedirs(os.path.dirname(abstract_reviewers), exist_ok=True)
     with open(abstract_reviewers, mode='w', newline='\n') as f:
         f.write('[\n')
         
