@@ -37,7 +37,7 @@ if os.path.exists(cached_graph):
         mapping = {node: str(node) for node in G.nodes()}
         G = nx.relabel_nodes(G, mapping) #assicurarsi che siano stringhe
         [nx.set_node_attributes(G, {n: int(d['bits_id']) for n, d in G.nodes(data=True) if 'bits_id' in d and str(d['bits_id']).strip().isdigit()}, 'bits_id')]
-    print(G.nodes)
+    # print(G.nodes)
     print("Load cached graph.")
     for node in G.nodes():
         if 'topics' in G.nodes[node]:
